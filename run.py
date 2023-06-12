@@ -5,9 +5,9 @@ def get_routing_table(router_ip):
     routing_table = []
 
     # SNMP Object Identifiers (OIDs) for routing table information
-    oid_route_index = '1.3.6.1.2.1.4.20.1.1'  # IP Route Index
-    #oid_route_dest = '1.3.6.1.2.1.4.24.4.1.4'  # IP Route Destination
-    oid_route_nexthop = '1.3.6.1.2.1.4.24.4.1.4'  # IP Route Next Hop
+    oid_route_index = '1.3.6.1.2.1.4.21.1.1'  # IP Route Index
+    oid_route_dest = '1.3.6.1.2.1.4.21.1.1'  # IP Route Destination
+    oid_route_nexthop = '1.3.6.1.2.1.4.21.1.7'  # IP Route Next H
 
     for (errorIndication, errorStatus, errorIndex, varBinds) in nextCmd(
         SnmpEngine(),
@@ -15,6 +15,7 @@ def get_routing_table(router_ip):
         UdpTransportTarget((router_ip, 161)),  # Router IP address and SNMP port
         ContextData(),
         ObjectType(ObjectIdentity(oid_route_index)),
+        ObjectType(ObjectIdentity(oid_route_dest)),
         ObjectType(ObjectIdentity(oid_route_nexthop)),
         lexicographicMode=False
     ):
