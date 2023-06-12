@@ -72,15 +72,21 @@ def get_router_ip_via_dhcp():
 
 def get_option(dhcp_options, key):
     must_decode = ['hostname', 'domain', 'vendor_class_id']
-    for option, value in dhcp_options:
-        if option == key:
-            if isinstance(value, bytes):
-                if key in must_decode:
-                    return value.decode()
+    try:
+        for option in dhcp_options:
+            if option[0] == key:
+                # If DHCP Server returned multiple values
+                if isinstance(option[1], tuple):
+                    if key == 'name_server':
+                        return ",".join(option[1])
+                    else:
+                        return option[1][0]
+                elif key in must_decode:
+                    return option[1].decode()
                 else:
-                    return value
-            else:
-                return value
+                    return option[1]
+    except:
+        pass
 
 def main():
     router_ip = get_router_ip_via_dhcp()
