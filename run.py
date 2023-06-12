@@ -28,8 +28,8 @@ def get_routing_table(router_ip):
         else:
             for varBind in varBinds:
                 route_index = varBind[0][1]
-                route_dest = varBind[1][1].prettyPrint()
-                route_nexthop = varBind[2][1].prettyPrint()
+                route_dest = str(varBind[1][1])
+                route_nexthop = str(varBind[2][1])
 
                 route_info = {
                     'index': route_index,
