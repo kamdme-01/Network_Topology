@@ -45,8 +45,9 @@ def discover_topology(router_ip, community):
     # Retrieve the routing table from the router
     routing_table = get_routing_table(router_ip)
 
-    print("*"*53)
+    print("====================================================")
     print(f"This is the topology from: {router_ip}")
+    print("====================================================")
 
     for route in routing_table:
         route_dest = route['destination']
@@ -54,6 +55,10 @@ def discover_topology(router_ip, community):
 
         # Print the current interface
         print(f"Interface: {route_dest}")
+
+        # Handle SNMP integer values
+        if isinstance(route_next_hop, int):
+            route_next_hop = str(route_next_hop)
 
         # Recursively discover the topology for the next hop if it exists
         if route_next_hop != '0.0.0.0':
