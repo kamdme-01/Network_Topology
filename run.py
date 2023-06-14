@@ -66,11 +66,23 @@ def discover_routers(router_ip):
     routing_table = get_routing_table(router_ip)
 
     for entry in routing_table:
-        if 'next_hop' in entry:
-            next_hop = entry['next_hop']
-            discover_routers(next_hop)
-        else:
-            print('No next hop found')
+        if ('0.0.0.0' in value.prettyPrint()) or value.prettyPrint() == notFound:
+                    continue
+
+        #Print the current intnerface
+        if oid_interfaces in str(oid):
+            print(f'Interface : {value.prettyPrint()}')
+
+        #Save the nextHop if there is one.
+        if oid_next_hop in str(oid):
+            next_hop = value.prettyPrint()
+            
+#Recursively method for nextHop if exist
+if next_hop:
+    print(f'NextHop IP address is : {next_hop}')
+    discover_routers(next_hop)
+else:
+    print('No NextHop IP address found')
             
 
 # Main function to start the topology discovery
