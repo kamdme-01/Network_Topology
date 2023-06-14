@@ -1,6 +1,20 @@
 from pysnmp.hlapi import *
 from scapy.all import *
 
+def get_initial_dhcp_router():
+    dhcp_discover = Ether(dst="ff:ff:ff:ff:ff:ff") / IP(src="0.0.0.0", dst="255.255.255.255") / UDP(sport=68, dport=67) / BOOTP(chaddr=RandMAC()) / DHCP(options=[("message-type", "discover"), "end"])
+
+    # Send DHCP discover packet and capture the response
+    dhcp_offer = srp1(dhcp_discover, verbose=False)
+
+    # Extract the initial DHCP router IP from the response
+    if dhcp_offer and DHCP in dhcp_offer:
+        for option in dhcp_offer[DHCP].options:
+            if option[0] == "router":
+                return option[1]
+
+    return None
+
 # Function to retrieve routing table information using SNMP
 def get_routing_table(router_ip):
     community_string = 'public'  # Replace with your SNMP community string
@@ -43,7 +57,9 @@ def discover_routers(router_ip):
 
 # Main function to start the topology discovery
 def main():
-    dhcp_router_ip = '0.0.0.0'  # Replace with the initial DHCP router IP
+    dhcp_router_ip =  get_initial_dhcp_router()
+    if not dhcp_router_ip:
+        return
 
     print("Starting network topology discovery...")
     discover_routers(dhcp_router_ip)
