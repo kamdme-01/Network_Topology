@@ -64,6 +64,7 @@ def get_routing_table(router_ip):
 def discover_routers(router_ip):
     print(f"Discovering router at {router_ip}")
     routing_table = get_routing_table(router_ip)
+    notFound = 'No more variables left in this MIB View'
     next_hop = ''
     for entry in routing_table:
         oid, value = entry
