@@ -34,8 +34,7 @@ def get_initial_dhcp_router():
 # Function to retrieve routing table information using SNMP
 def get_routing_table(router_ip):
     community_string = 'public' 
-
-    print(ObjectType(ObjectIdentity(oid_interfaces)))    
+  
     iterator =  getCmd(SnmpEngine(),
                         CommunityData(community_string),
                         UdpTransportTarget((router_ip, 161)),
@@ -66,7 +65,7 @@ def get_routing_table(router_ip):
 # Recursive function to discover routers in the network
 def discover_routers(router_ip):
     print(f"Discovering router at {router_ip}")
-    routing_table = get_routing_table(router_ip, community)
+    routing_table = get_routing_table(router_ip)
 
     for entry in routing_table:
         if 'next_hop' in entry:
