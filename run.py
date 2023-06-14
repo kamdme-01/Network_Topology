@@ -16,7 +16,6 @@ oid_next_hop = '1.3.6.1.2.1.4.24.4.1.4'
 
 
 def get_initial_dhcp_router():
-    print("starting method")
     dhcp_discover = Ether(dst="ff:ff:ff:ff:ff:ff") / IP(src="0.0.0.0", dst="255.255.255.255") / UDP(sport=68, dport=67) / BOOTP(op=1, chaddr="ff:ff:ff:ff:ff:ff") / DHCP(options=[("message-type", "discover"), "end"])
 
     # Send DHCP discover packet and capture the response
@@ -25,7 +24,6 @@ def get_initial_dhcp_router():
     # Extract the initial DHCP router IP from the response
     if dhcp_offer and DHCP in dhcp_offer:
         for option in dhcp_offer[DHCP].options:
-            print('*')
             if option[0] == "router":
                 return option[1]
 
@@ -89,7 +87,7 @@ def discover_routers(router_ip):
 
 # Main function to start the topology discovery
 def main():
-    print("starting main")
+    print("starting")
     dhcp_router_ip =  get_initial_dhcp_router()
     if not dhcp_router_ip:
         return
