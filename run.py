@@ -16,15 +16,17 @@ mib_view_controller = view.MibViewController(mib_builder)
 def get_routing_table(router_ip):
     community_string = 'public' 
     oid_interfaces = '1.3.6.1.2.1.4.20.1.1'
+    snmp_object = ObjectType(ObjectIdentity('IP-MIB', 'ipRouteTable'))
+
     
     iterator =  getCmd(SnmpEngine(),
                         CommunityData(community_string),
-                        UdpTransportTarget((host, 161)),
+                        UdpTransportTarget((router_ip, 161)),
                         ContextData(),
-                        ObjectType(ObjectIdentity(oid_interfaces)),
+                        snmp_object,
                         lookupNames=True,
-                        lookupValues=True
-                        lexicographicMode=False):
+                        lookupValues=True,
+                        lexicographicMode=False)
 
     # Iterate over SNMP response and retrieve routing table entries
     routing_table = []
