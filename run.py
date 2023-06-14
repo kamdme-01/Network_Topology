@@ -10,7 +10,7 @@ def get_initial_dhcp_router():
     # Extract the initial DHCP router IP from the response
     if dhcp_offer and DHCP in dhcp_offer:
         for option in dhcp_offer[DHCP].options:
-            print(*)
+            print('*')
             if option[0] == "router":
                 return option[1]
 
