@@ -78,12 +78,12 @@ def discover_routers(router_ip):
         if oid_next_hop in str(oid):
             next_hop = value.prettyPrint()
             
-#Recursively method for nextHop if exist
-if next_hop:
-    print(f'NextHop IP address is : {next_hop}')
-    discover_routers(next_hop)
-else:
-    print('No NextHop IP address found')
+    #Recursively method for nextHop if exist
+    if next_hop:
+        print(f'NextHop IP address is : {next_hop}')
+        discover_routers(next_hop)
+    else:
+        print('No NextHop IP address found')
             
 
 # Main function to start the topology discovery
