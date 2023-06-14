@@ -5,29 +5,13 @@ from scapy.config import conf
 
 conf.checkIPaddr = False
 
-from pysnmp.smi import builder, view
-
-# Create a new MIB builder
-mibBuilder = builder.MibBuilder()
-
-# Load the default MIB sources
-mibSources = mibBuilder.getMibSources()
-
-# Get the MIB view
-mibView = view.MibViewController(mibBuilder)
-
-# Load required MIB modules
-mibBuilder.loadModules('RFC1213-MIB')
 
 # Get the OID for oid_interfaces
-oid_interfaces = mibView.getNodeName('ipAdEntAddr')  # Replace with the appropriate MIB object name
+oid_interfaces = '1.3.6.1.2.1.4.20.1.1'
 
 # Get the OID for oid_next_hop
-oid_next_hop = mibView.getNodeName('ipRouteNextHop')  # Replace with the appropriate MIB object name
+oid_next_hop = '1.3.6.1.2.1.4.24.4.1.4'
 
-# Print the OIDs
-print(f"OID for oid_interfaces: {oid_interfaces}")
-print(f"OID for oid_next_hop: {oid_next_hop}")
 
 
 
@@ -50,9 +34,8 @@ def get_initial_dhcp_router():
 # Function to retrieve routing table information using SNMP
 def get_routing_table(router_ip):
     community_string = 'public' 
-    oid_interfaces = '1.3.6.1.2.1.4.20.1.1'
 
-    
+    print(ObjectType(ObjectIdentity(oid_interfaces)))    
     iterator =  getCmd(SnmpEngine(),
                         CommunityData(community_string),
                         UdpTransportTarget((router_ip, 161)),
