@@ -66,6 +66,7 @@ def discover_routers(router_ip):
     routing_table = get_routing_table(router_ip)
 
     for entry in routing_table:
+        oid, value = entry
         if ('0.0.0.0' in value.prettyPrint()) or value.prettyPrint() == notFound:
                     continue
 
