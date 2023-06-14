@@ -20,7 +20,7 @@ mibView = view.MibViewController(mibBuilder)
 mibBuilder.loadModules('RFC1213-MIB')
 
 # Get the OID for oid_interfaces
-oid_interfaces = mibView.getNodeName('ipRouteIfIndex')  # Replace with the appropriate MIB object name
+oid_interfaces = mibView.getNodeName('ipAdEntAddr')  # Replace with the appropriate MIB object name
 
 # Get the OID for oid_next_hop
 oid_next_hop = mibView.getNodeName('ipRouteNextHop')  # Replace with the appropriate MIB object name
