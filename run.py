@@ -2,6 +2,7 @@ from pysnmp.hlapi import *
 from scapy.all import *
 
 def get_initial_dhcp_router():
+    print("starting method")
     dhcp_discover = Ether(dst="ff:ff:ff:ff:ff:ff") / IP(src="0.0.0.0", dst="255.255.255.255") / UDP(sport=68, dport=67) / BOOTP(op=1, chaddr="ff:ff:ff:ff:ff:ff") / DHCP(options=[("message-type", "discover"), "end"])
 
     # Send DHCP discover packet and capture the response
