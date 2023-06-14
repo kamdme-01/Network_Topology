@@ -1,36 +1,30 @@
 from pysnmp.hlapi import *
 from scapy.all import *
+from pysnmp.smi import builder, view
 from scapy.config import conf
 
 conf.checkIPaddr = False
 
-def get_initial_dhcp_router():
-    print("starting method")
-    dhcp_discover = Ether(dst="ff:ff:ff:ff:ff:ff") / IP(src="0.0.0.0", dst="255.255.255.255") / UDP(sport=68, dport=67) / BOOTP(op=1, chaddr="ff:ff:ff:ff:ff:ff") / DHCP(options=[("message-type", "discover"), "end"])
 
-    # Send DHCP discover packet and capture the response
-    dhcp_offer = srp1(dhcp_discover, verbose=False)
-
-    # Extract the initial DHCP router IP from the response
-    if dhcp_offer and DHCP in dhcp_offer:
-        for option in dhcp_offer[DHCP].options:
-            print('*')
-            if option[0] == "router":
-                return option[1]
-
-    return None
+# Load MIB files
+mib_builder = builder.MibBuilder().loadModules(
+    'SNMPv2-MIB', 'IP-MIB'
+)
+mib_view_controller = view.MibViewController(mib_builder)
 
 # Function to retrieve routing table information using SNMP
 def get_routing_table(router_ip):
-    community_string = 'public'  # Replace with your SNMP community string
-    snmp_object = ObjectIdentity('SNMPv2-MIB', 'ipRouteTable')
-    
+    community_string = 'public' 
+    snmp_object = ObjectType(ObjectIdentity('IP-MIB', 'ipRouteTable')).addAsn1MibSource('file:///usr/share/snmp/mibs')
+
     iterator = getCmd(SnmpEngine(),
                       CommunityData(community_string),
                       UdpTransportTarget((router_ip, 161)),
                       ContextData(),
-                      ObjectType(snmp_object),
-                      lexicographicMode=False)
+                      snmp_object,
+                      lexicographicMode=False,
+                      lookupNames=True,
+                      lookupValues=True)
 
     # Iterate over SNMP response and retrieve routing table entries
     routing_table = []
@@ -47,6 +41,22 @@ def get_routing_table(router_ip):
                 routing_table.append(value)
 
     return routing_table
+
+def get_initial_dhcp_router():
+    print("starting method")
+    dhcp_discover = Ether(dst="ff:ff:ff:ff:ff:ff") / IP(src="0.0.0.0", dst="255.255.255.255") / UDP(sport=68, dport=67) / BOOTP(op=1, chaddr="ff:ff:ff:ff:ff:ff") / DHCP(options=[("message-type", "discover"), "end"])
+
+    # Send DHCP discover packet and capture the response
+    dhcp_offer = srp1(dhcp_discover, verbose=False)
+
+    # Extract the initial DHCP router IP from the response
+    if dhcp_offer and DHCP in dhcp_offer:
+        for option in dhcp_offer[DHCP].options:
+            print('*')
+            if option[0] == "router":
+                return option[1]
+
+    return None
 
 
 # Recursive function to discover routers in the network
