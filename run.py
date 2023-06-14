@@ -65,6 +65,7 @@ def get_initial_dhcp_router():
 def discover_routers(router_ip):
     print(f"Discovering router at {router_ip}")
     routing_table = get_routing_table(router_ip)
+    print(routing_table)
 
     for entry in routing_table:
         next_hop = entry['ipRouteNextHop']
