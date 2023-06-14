@@ -1,5 +1,8 @@
 from pysnmp.hlapi import *
 from scapy.all import *
+from scapy.config import conf
+
+conf.checkIPaddr = false
 
 def get_initial_dhcp_router():
     print("starting method")
