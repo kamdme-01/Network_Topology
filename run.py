@@ -55,9 +55,7 @@ def get_routing_table(router_ip):
             print(f"Error: {errorStatus}")
             break
         else:
-            for varBind in varBinds:
-                oid, value = varBind
-                routing_table.append(value)
+            routing_table.append(varBinds)
 
     return routing_table
 
