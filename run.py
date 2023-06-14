@@ -58,6 +58,7 @@ def discover_routers(router_ip):
 
 # Main function to start the topology discovery
 def main():
+    print("starting main")
     dhcp_router_ip =  get_initial_dhcp_router()
     if not dhcp_router_ip:
         return
